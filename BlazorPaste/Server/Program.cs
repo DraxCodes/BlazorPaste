@@ -3,6 +3,7 @@ using BlazorPaste.Server.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace BlazorPaste
 {
@@ -25,6 +26,16 @@ namespace BlazorPaste
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
             builder.Services.AddAuthentication()
+                .AddGitHub(options =>
+                {
+                    options.ClientId = "7a077337c943cda036a1";
+                    options.ClientSecret = "243da30e4f63fb42cd2483b55400ed4e74f44f5d";
+                })
+                .AddDiscord(options =>
+                {
+                    options.ClientId = "1019716705146130442";
+                    options.ClientSecret = "sS9rCEIRYn6uI-rvxRquV-RsNHvxMqhO";
+                })
                 .AddIdentityServerJwt();
 
             builder.Services.AddControllersWithViews();
