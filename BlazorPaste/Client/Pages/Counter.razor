@@ -2,11 +2,10 @@
 
 <PageTitle>Counter</PageTitle>
 
-<h1>Counter</h1>
-
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<MudText Typo="Typo.h2">Current Count: @currentCount</MudText>
+<MudDivider />
+<MudFab Class="ma-3" StartIcon="@Icons.Material.Filled.ArrowCircleUp" Label="Click Me" OnClick="IncrementCount" />
+<MudFab Class="ma-3" StartIcon="@Icons.Material.Filled.Clear" Label="Reset" OnClick="ResetCount" />
 
 @code {
     private int currentCount = 0;
@@ -14,5 +13,10 @@
     private void IncrementCount()
     {
         currentCount++;
+    }
+
+    private void ResetCount()
+    {
+        currentCount = 0;
     }
 }

@@ -9,9 +9,12 @@
               OnDidChangeCursorPosition="EditorDidChangeCursorPosition" />
 
 
-<MudGrid>
+<MudGrid Justify="Justify.SpaceBetween">
     <MudItem xs="12" sm="6" md="4">
         <MudAutocomplete T="string" Label="Langauges" IsOpenChanged="ValueChangedSetLanguage" @bind-Value="selectedLanguage" SearchFunc="@SearchLanguages" Margin="Margin.Dense" Dense="true" Variant="Variant.Outlined" />
+    </MudItem>
+    <MudItem>
+        <MudFab Class="mr-4" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Send" Label="Create Paste" />
     </MudItem>
 </MudGrid>
 @code {
