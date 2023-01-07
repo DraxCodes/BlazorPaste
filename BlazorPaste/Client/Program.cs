@@ -2,6 +2,7 @@ using BlazorPaste.Client;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Services;
 
 namespace BlazorPaste.Client
 {
@@ -20,8 +21,9 @@ namespace BlazorPaste.Client
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("BlazorPaste.ServerAPI"));
 
             builder.Services.AddApiAuthorization();
+			builder.Services.AddMudServices();
 
-            await builder.Build().RunAsync();
+			await builder.Build().RunAsync();
         }
     }
 }

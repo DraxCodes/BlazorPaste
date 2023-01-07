@@ -2,72 +2,105 @@
 
 <PageTitle>Index</PageTitle>
 
+<MonacoEditor Id="myMainEditor"
+              @ref="_editor"
+              OnDidInit="EditorOnDidInit"
+              ConstructionOptions="EditorConstructionOptions"
+              OnDidChangeCursorPosition="EditorDidChangeCursorPosition" />
+
+
+<MudGrid>
+    <MudItem xs="12" sm="6" md="4">
+        <MudAutocomplete T="string" Label="Langauges" IsOpenChanged="ValueChangedSetLanguage" @bind-Value="selectedLanguage" SearchFunc="@SearchLanguages" Margin="Margin.Dense" Dense="true" Variant="Variant.Outlined" />
+    </MudItem>
+</MudGrid>
 @code {
-	private MonacoEditor _editor { get; set; }
-	private string[] decorationIds;
+    private MonacoEditor? _editor { get; set; }
+    private string[]? decorationIds;
+    private string selectedLanguage = "javascript";
+    private string[] languages = new string[]
+    {
+        "abap","aes","apex","azcli","bat","bicep","c","cameligo","clojure","coffeescript","cpp",
+        "csharp","csp","css","cypher","dart","dockerfile","ecl","elixir","flow9","freemarker2","fsharp",
+        "go","graphql","handlebars","hcl","html","ini","java","javascript","json","julia",
+        "kotlin","less","lexon","liquid","lua","m3","markdown","mips","msdax","mysql","objective-c","pascal","pascaligo",
+        "perl","pgsql","php","pla","plaintext","postiats","powerquery","powershell","proto","pug","python","qsharp","r",
+        "razor","redis","redshift","restructuredtext","ruby","rust","sb","scala","scheme","scss","shell","sol","sparql",
+        "sql","st","swift","systemverilog","tcl","twig","typescript","vb","verilog","xml","yaml"
+    };
 
-	private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
-	{
-		return new StandaloneEditorConstructionOptions
-			{
-				AutomaticLayout = false,
-				Dimension = new Dimension() {Height = 700, Width = 1500},
-				Scrollbar = new EditorScrollbarOptions()
-				{
-					Vertical = "hidden",
-					Horizontal = "hidden"
-				},
-				Language = "javascript",
-				Value = "\"use strict\";\n" +
-                    "function Person(age) {\n" +
-                    "	if (age) {\n" +
-                    "		this.age = age;\n" +
-                    "	}\n" +
-                    "}\n" +
-                    "Person.prototype.getAge = function () {\n" +
-                    "	return this.age;\n" +
-                    "};\n"
-				
-			};
-	}
+    private async Task<IEnumerable<string>> SearchLanguages(string value)
+    {
+        //Add delay for rendering purposes
+        await Task.Delay(5);
 
-	private void EditorDidChangeCursorPosition(CursorPositionChangedEvent eventArgs)
-	{
-		Console.WriteLine("EditorDidChangeCursorPosition");
-	}
+        // if text is null or empty, show complete list
+        if (string.IsNullOrEmpty(value))
+            return languages;
+        return languages.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
 
-	private async Task EditorOnDidInit(MonacoEditorBase editor)
-	{
-		await _editor.AddCommand((int)KeyMode.CtrlCmd | (int)KeyCode.KEY_H, (editor, keyCode) =>
-		{
-			Console.WriteLine("Ctrl+H : Initial editor command is triggered.");
-		});
+    public async Task ValueChangedSetLanguage()
+    {
+        var currentModel = await _editor!.GetModel();
+        await MonacoEditor.SetModelLanguage(currentModel, selectedLanguage);
+        Console.WriteLine($"Selected language changed to {selectedLanguage}");
+    }
 
-		var newDecorations = new ModelDeltaDecoration[]
-		{
-			new ModelDeltaDecoration
-			{
-				Range = new BlazorMonaco.Range(3,1,3,1),
-				Options = new ModelDecorationOptions
-				{
-					IsWholeLine = true,
-					ClassName = "decorationContentClass",
-					GlyphMarginClassName = "decorationGlyphMarginClass"
-				}
-			}
-		};
+    private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+            {
+                AutomaticLayout = true,
+                Dimension = new Dimension() { Height = 700, Width = 1500 },
+                Scrollbar = new EditorScrollbarOptions()
+                {
+                    Vertical = "hidden",
+                    Horizontal = "hidden"
+                },
+                Language = "javascript",
+                Value = "\"use strict\";\n" +
+                        "function Person(age) {\n" +
+                        "	if (age) {\n" +
+                        "		this.age = age;\n" +
+                        "	}\n" +
+                        "}\n" +
+                        "Person.prototype.getAge = function () {\n" +
+                        "	return this.age;\n" +
+                        "};\n"
 
-		decorationIds = await _editor.DeltaDecorations(null, newDecorations);
-		// You can now use 'decorationIds' to change or remove the decorations
-	}
+            };
+    }
+
+    private void EditorDidChangeCursorPosition(CursorPositionChangedEvent eventArgs)
+    {
+        Console.WriteLine("EditorDidChangeCursorPosition");
+    }
+
+    private async Task EditorOnDidInit(MonacoEditorBase editor)
+    {
+        await _editor!.AddCommand((int)KeyMode.CtrlCmd | (int)KeyCode.KEY_H, async (editor, keyCode) =>
+        {
+            Console.WriteLine("Ctrl+H : Initial editor command is triggered.");
+
+        });
+
+        var newDecorations = new ModelDeltaDecoration[]
+        {
+            new ModelDeltaDecoration
+            {
+                Range = new BlazorMonaco.Range(3,1,3,1),
+                Options = new ModelDecorationOptions
+                {
+                    IsWholeLine = true,
+                    ClassName = "decorationContentClass",
+                    GlyphMarginClassName = "decorationGlyphMarginClass"
+                }
+            }
+        };
+
+        decorationIds = await _editor.DeltaDecorations(null, newDecorations);
+        // You can now use 'decorationIds' to change or remove the decorations
+    }
 
 }
-
-<div class="content px-4">
-	<MonacoEditor Id="myMainEditor"
-				  @ref="_editor"
-				  OnDidInit="EditorOnDidInit"
-				  ConstructionOptions="EditorConstructionOptions"
-				  OnDidChangeCursorPosition="EditorDidChangeCursorPosition" />
-</div>
-

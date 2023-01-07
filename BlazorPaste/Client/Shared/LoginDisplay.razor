@@ -4,12 +4,18 @@
 
 <AuthorizeView>
     <Authorized>
-        <a href="authentication/profile">Hello, @context.User.Identity?.Name!</a>
-        <button class="nav-link btn btn-link" @onclick="BeginLogOut">Log out</button>
+        <MudButtonGroup Color="Color.Secondary" Variant="Variant.Filled">
+        <MudButton StartIcon="@Icons.Material.Filled.ManageAccounts">
+            <a href="authentication/profile">Hello, @context.User.Identity?.Name!</a>
+        </MudButton>
+        <MudButton StartIcon="@Icons.Material.Filled.Logout" OnClick="@BeginLogOut">Log out</MudButton>
+        </MudButtonGroup>
     </Authorized>
     <NotAuthorized>
-        <a href="authentication/register">Register</a>
-        <a href="authentication/login">Log in</a>
+        <MudButtonGroup Color="Color.Secondary" Variant="Variant.Filled">
+        <MudButton StartIcon="@Icons.Material.Filled.AppRegistration"><a href="authentication/register">Register</a></MudButton>
+        <MudButton StartIcon="@Icons.Material.Filled.Login"><a href="authentication/login">Log in</a></MudButton>
+        </MudButtonGroup>
     </NotAuthorized>
 </AuthorizeView>
 
