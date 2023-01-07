@@ -7,47 +7,32 @@
 
 <PageTitle>Weather forecast</PageTitle>
 
-<h1>Weather forecast</h1>
-
-<p>This component demonstrates fetching data from the server.</p>
-
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+<MudPaper Class="pa-16 ma-2" Elevation="3">
+    <MudTable Items="@pastes.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+        <HeaderContent>
+            <MudTh>ID</MudTh>
+            <MudTh>Body</MudTh>
+            <MudTh>Language</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="ID">@context.ID</MudTd>
+            <MudTd DataLabel="Body">@context.Body</MudTd>
+            <MudTd DataLabel="Language">@context.Language</MudTd>
+        </RowTemplate>
+    </MudTable>
+</MudPaper>
 
 @code {
-    private WeatherForecast[]? forecasts;
+    private IEnumerable<UserPasteItem> pastes = new List<UserPasteItem>();
+    private bool _loading;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+            _loading = true;
+            pastes = await Http.GetFromJsonAsync<List<UserPasteItem>>("api/pastes");
+            _loading = false;
         }
         catch (AccessTokenNotAvailableException exception)
         {

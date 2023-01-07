@@ -1,4 +1,5 @@
 ﻿using BlazorPaste.Server.Models;
+using BlazorPaste.Shared;
 using Duende.IdentityServer.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
@@ -13,5 +14,7 @@ namespace BlazorPaste.Server.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
+
+        public DbSet<UserPasteItem> Pastes => Set<UserPasteItem>();
     }
 }
