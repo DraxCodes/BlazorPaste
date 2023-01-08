@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject HttpClient Http
 
 <PageTitle>Index</PageTitle>
 
@@ -14,13 +15,14 @@
         <MudAutocomplete T="string" Label="Langauges" IsOpenChanged="ValueChangedSetLanguage" @bind-Value="selectedLanguage" SearchFunc="@SearchLanguages" Margin="Margin.Dense" Dense="true" Variant="Variant.Outlined" />
     </MudItem>
     <MudItem>
-        <MudFab Class="mr-4" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Send" Label="Create Paste" />
+        <MudFab OnClick="CreatePasteButtonClick" Class="mr-4" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Send" Label="Create Paste" />
     </MudItem>
 </MudGrid>
 @code {
     private MonacoEditor? _editor { get; set; }
     private string[]? decorationIds;
     private string selectedLanguage = "javascript";
+    private string editorTextValue = "";
     private string[] languages = new string[]
     {
         "abap","aes","apex","azcli","bat","bicep","c","cameligo","clojure","coffeescript","cpp",
@@ -50,6 +52,17 @@
         Console.WriteLine($"Selected language changed to {selectedLanguage}");
     }
 
+    private async Task CreatePasteButtonClick()
+    {
+        var paste = new UserPasteItem()
+        {
+            Body = editorTextValue,
+            Language = selectedLanguage
+        };
+
+        await Http.PostAsJsonAsync("api/pastes", paste);
+    }
+
     private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
     {
         return new StandaloneEditorConstructionOptions
@@ -75,9 +88,10 @@
             };
     }
 
-    private void EditorDidChangeCursorPosition(CursorPositionChangedEvent eventArgs)
+    private async Task EditorDidChangeCursorPosition(CursorPositionChangedEvent eventArgs)
     {
         Console.WriteLine("EditorDidChangeCursorPosition");
+        editorTextValue = await _editor!.GetValue();
     }
 
     private async Task EditorOnDidInit(MonacoEditorBase editor)

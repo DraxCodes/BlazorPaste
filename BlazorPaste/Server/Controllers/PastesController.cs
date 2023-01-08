@@ -32,5 +32,18 @@ namespace BlazorPaste.Server.Controllers
 
             return Ok(user.Pastes);
         }
+
+        [HttpPost]
+        public async Task<ActionResult<UserPasteItem>> CreatePaste(UserPasteItem paste)
+        {
+            var user = await _context.Users
+                .Include(x => x.Pastes)
+                .FirstOrDefaultAsync(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            if (user == null) { return BadRequest(); }
+            user.Pastes.Add(paste);
+            _context.SaveChanges();
+            return Ok();
+        }
     }
 }
