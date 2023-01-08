@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPaste.Server", "BlazorPaste\Server\BlazorPaste.Server.csproj", "{046F8622-2F21-4E58-9EC6-83614BB7BC2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPaste.Server", "BlazorPaste\Server\BlazorPaste.Server.csproj", "{046F8622-2F21-4E58-9EC6-83614BB7BC2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPaste.Client", "BlazorPaste\Client\BlazorPaste.Client.csproj", "{EFD8ABCF-4FA9-4983-9D2F-FA368AFEA6D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPaste.Client", "BlazorPaste\Client\BlazorPaste.Client.csproj", "{EFD8ABCF-4FA9-4983-9D2F-FA368AFEA6D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPaste.Shared", "BlazorPaste\Shared\BlazorPaste.Shared.csproj", "{F0C81285-D9DD-4A31-AC08-F1504D516D80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPaste.Shared", "BlazorPaste\Shared\BlazorPaste.Shared.csproj", "{F0C81285-D9DD-4A31-AC08-F1504D516D80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

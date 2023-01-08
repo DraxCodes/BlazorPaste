@@ -1,0 +1,39 @@
+﻿@page "/allpastes"
+@inject HttpClient Http
+
+<PageTitle>All Pastes</PageTitle>
+
+<MudPaper Class="pa-16 ma-2" Elevation="3">
+    <MudTable Items="@pastes.Take(20)" RowStyle="white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 200px" Dense="true" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+        <HeaderContent>
+            <MudTh>ID</MudTh>
+            <MudTh>Language</MudTh>
+            <MudTh>Body</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="ID">@context.ID</MudTd>
+            <MudTd DataLabel="Language">@context.Language</MudTd>
+            <MudTd DataLabel="Body">@context.Body</MudTd>
+        </RowTemplate>
+    </MudTable>
+</MudPaper>
+
+@code {
+    private IEnumerable<UserPasteItem> pastes = new List<UserPasteItem>();
+    private bool _loading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _loading = true;
+            var data = await Http.GetFromJsonAsync<List<UserPasteItem>>("api/pastes/getall");
+            pastes = data!;
+            _loading = false;
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception.Message);
+        }
+    }
+}

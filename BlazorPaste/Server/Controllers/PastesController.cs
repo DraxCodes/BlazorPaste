@@ -7,8 +7,8 @@ using System.Security.Claims;
 
 namespace BlazorPaste.Server.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
+    [AllowAnonymous]
     [ApiController]
     public class PastesController : ControllerBase
     {
@@ -19,7 +19,26 @@ namespace BlazorPaste.Server.Controllers
             _context = context;
         }
 
+        [HttpGet("getall")]
+        [AllowAnonymous]
+        public async Task<ActionResult<List<UserPasteItem>>> GetAllPastes()
+        {
+            var pastes = _context.Pastes;
+            return Ok(await pastes.ToListAsync());
+        }
+
+        [HttpGet("getbyid")]
+        [AllowAnonymous]
+        public async Task<ActionResult<UserPasteItem>> GetById(int id)
+        {
+            var pastes = _context.Pastes;
+            var selectedPaste = await pastes.FirstOrDefaultAsync(p => p.ID == id);
+            if (selectedPaste is null) { return BadRequest(); }
+            return Ok(selectedPaste);
+        }
+
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<UserPasteItem>>> GetPastes()
         {
             var user = await _context.Users
@@ -34,6 +53,7 @@ namespace BlazorPaste.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<UserPasteItem>> CreatePaste(UserPasteItem paste)
         {
             var user = await _context.Users
