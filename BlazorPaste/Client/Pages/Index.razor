@@ -21,7 +21,6 @@
 
 @code {
     private MonacoEditor? _editor { get; set; }
-    private string[]? decorationIds;
     private string selectedLanguage = "javascript";
     private string editorTextValue = "";
     private string[] languages = new string[]
@@ -92,28 +91,7 @@
 
     private async Task EditorOnDidInit(MonacoEditorBase editor)
     {
-        await _editor!.AddCommand((int)KeyMode.CtrlCmd | (int)KeyCode.KEY_H, async (editor, keyCode) =>
-        {
-            Console.WriteLine("Ctrl+H : Initial editor command is triggered.");
-
-        });
-
-        var newDecorations = new ModelDeltaDecoration[]
-        {
-            new ModelDeltaDecoration
-            {
-                Range = new BlazorMonaco.Range(3,1,3,1),
-                Options = new ModelDecorationOptions
-                {
-                    IsWholeLine = true,
-                    ClassName = "decorationContentClass",
-                    GlyphMarginClassName = "decorationGlyphMarginClass"
-                }
-            }
-        };
-
-        decorationIds = await _editor.DeltaDecorations(null, newDecorations);
-        // You can now use 'decorationIds' to change or remove the decorations
+        await _editor!.SetValue("");
     }
 
 }

@@ -1,0 +1,45 @@
+﻿@page "/paste/{id}"
+@inject HttpClient Http
+
+<MonacoEditor Id="myMainEditor"
+              @ref="_editor"
+              ConstructionOptions="EditorConstructionOptions"/>
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+
+    private MonacoEditor? _editor { get; set; }
+    private UserPasteItem selectedPaste = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var data = await Http.GetFromJsonAsync<UserPasteItem>($"api/pastes/getbyid?id={Id}");
+        if (data is not null)
+        {
+            selectedPaste = data;
+        }
+
+        await _editor!.SetValue(selectedPaste!.Body);
+        var model = await _editor!.GetModel();
+        await MonacoEditor.SetModelLanguage(model, selectedPaste!.Language);
+    }
+
+    private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+            {
+                AutomaticLayout = true,
+                Dimension = new Dimension() { Height = 700, Width = 1500 },
+                Scrollbar = new EditorScrollbarOptions()
+                {
+                    Vertical = "hidden",
+                    Horizontal = "hidden"
+                },
+                Language = "javascript",
+                Value = "",
+                ReadOnly = true
+
+            };
+    }
+}

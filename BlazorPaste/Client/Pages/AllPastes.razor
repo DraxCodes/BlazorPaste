@@ -1,10 +1,11 @@
 ﻿@page "/allpastes"
 @inject HttpClient Http
+@inject NavigationManager NavManager
 
 <PageTitle>All Pastes</PageTitle>
 
 <MudPaper Class="pa-16 ma-2" Elevation="3">
-    <MudTable Items="@pastes.Take(20)" RowStyle="white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 200px" Dense="true" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+    <MudTable Items="@pastes.Take(20)" OnRowClick="RowClickEvent" T="UserPasteItem" RowStyle="white-space: nowrap; overflow: hidden; text-overflow:ellipsis; width: 200px" Dense="true" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
         <HeaderContent>
             <MudTh>ID</MudTh>
             <MudTh>Language</MudTh>
@@ -21,6 +22,11 @@
 @code {
     private IEnumerable<UserPasteItem> pastes = new List<UserPasteItem>();
     private bool _loading;
+
+    private void RowClickEvent(TableRowClickEventArgs<UserPasteItem> tableRowClickEventArgs)
+    {
+        NavManager.NavigateTo($"/paste/{tableRowClickEventArgs.Item.ID}");
+    }
 
     protected override async Task OnInitializedAsync()
     {
