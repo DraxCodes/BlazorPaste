@@ -18,6 +18,7 @@
         <MudFab OnClick="CreatePasteButtonClick" Class="mr-4" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Send" Label="Create Paste" />
     </MudItem>
 </MudGrid>
+
 @code {
     private MonacoEditor? _editor { get; set; }
     private string[]? decorationIds;
@@ -61,6 +62,9 @@
         };
 
         await Http.PostAsJsonAsync("api/pastes", paste);
+
+        await _editor!.SetValue("");
+
     }
 
     private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
@@ -75,15 +79,7 @@
                     Horizontal = "hidden"
                 },
                 Language = "javascript",
-                Value = "\"use strict\";\n" +
-                        "function Person(age) {\n" +
-                        "	if (age) {\n" +
-                        "		this.age = age;\n" +
-                        "	}\n" +
-                        "}\n" +
-                        "Person.prototype.getAge = function () {\n" +
-                        "	return this.age;\n" +
-                        "};\n"
+                Value = ""
 
             };
     }
